@@ -1,0 +1,28 @@
+
+  h3{font-size: x-large; font-style:italic; color: red;text-align: center;}
+  * {
+    font-size: inherit;
+  }
+  #all{
+    background-image: url('./assets/background.jpeg');
+  }
+  
+  input {
+    display: block;
+    margin-bottom: 20px;
+  }
+  
+  select {
+    float: left;
+    margin: 0 1em 1em 0;
+    width: 300px;
+  }
+  
+  .buttons {
+    clear: both;
+  }
+  
+  button + button {
+    margin-left: 5px;
+  }
+  

@@ -1,0 +1,148 @@
+<!DOCTYPE html>   
+<html>
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>My homework with Vue.js</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <link href="style.css" rel="stylesheet">
+      </head>
+    <body id ="all">
+        <script type="importmap">
+            {
+              "imports": {
+                "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+              }
+            }
+        </script>          
+        <script type="module">
+            import { createApp, ref, reactive, computed, watch } from 'vue'
+            
+            createApp({
+              setup() {
+                const names = reactive(['Emil, Hans', 'Mustermann, Max', 'Tisch, Roman'])
+                const selected = ref('')
+                const prefix = ref('')
+                const first = ref('')
+                const last = ref('')
+            
+                const filteredNames = computed(() =>
+                  names.filter((n) =>
+                    n.toLowerCase().startsWith(prefix.value.toLowerCase())
+                  )
+                )
+            
+                watch(selected, (name) => {
+                  ;[last.value, first.value] = name.split(', ')
+                })
+            
+                function create() {
+                  if (hasValidInput()) {
+                    const fullName = `${last.value}, ${first.value}`
+                    if (!names.includes(fullName)) {
+                      names.push(fullName)
+                      first.value = last.value = ''
+                    }
+                  }
+                }
+            
+                function update() {
+                  if (hasValidInput() && selected.value) {
+                    const i = names.indexOf(selected.value)
+                    names[i] = selected.value = `${last.value}, ${first.value}`
+                  }
+                }
+            
+                function del() {
+                  if (selected.value) {
+                    const i = names.indexOf(selected.value)
+                    names.splice(i, 1)
+                    selected.value = first.value = last.value = ''
+                  }
+                }
+            
+                function hasValidInput() {
+                  return first.value.trim() && last.value.trim()
+                }
+            
+                return {
+                  filteredNames,
+                  selected,
+                  prefix,
+                  first,
+                  last,
+                  create,
+                  update,
+                  del
+                }
+              }
+            }).mount('#app')
+            </script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+            <div id="app" class="container">
+              <header>
+                <h3>List of yours guests</h3>
+              </header>
+              <div class="row">
+                <div class="col-sm-4" id = "border"><p></p></div>
+                <div class="col-sm-4" id = "border"><p></p></div>
+                <div class="col-4"><input v-model="prefix" placeholder="Filter prefix"></div>
+              </div>
+              <p></p>
+              <div class="row">
+                
+                <div class="col-sm-4">
+                  <select size="10" v-model="selected">
+                    <option v-for="name in filteredNames">{{ name }}</option>
+                  </select>
+                </div>
+                <div class="col-sm-4" id = "border"><p></p></div>
+                <div class="col-sm-4" id = "border">
+                  <p></p>
+                  <div class="row">
+                    <button @click="create">
+                      <-- 
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                        <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                        <path fill-rule="evenodd" d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5z"/>
+                      </svg>
+                      -->
+                    </button>
+                  </div>
+                  <div class="row">
+                    <button @click="update">
+                      <--
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                        <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                      </svg>
+                      -->
+                    </button>
+                  </div>
+                  <div class="row">
+                    <button @click="del">
+                      <--
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-x-fill" viewBox="0 0 16 16">
+                      <path fill-rule="evenodd" d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm6.146-2.854a.5.5 0 0 1 .708 0L14 6.293l1.146-1.147a.5.5 0 0 1 .708.708L14.707 7l1.147 1.146a.5.5 0 0 1-.708.708L14 7.707l-1.146 1.147a.5.5 0 0 1-.708-.708L13.293 7l-1.147-1.146a.5.5 0 0 1 0-.708z"/>
+                      </svg>
+                      -->
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <p></p>
+              <div class="row">
+                <div class="col-sm-6">
+                  <label>Name: <p></p><input v-model="first"></label>
+                </div>
+                <div class="col-sm-6">
+                  <label>Surname: <p></p><input v-model="last"></label>
+                </div>
+              </div>
+              <p></p>
+              <p></p>
+            </div>
+        
+    </body>
+</html>
